@@ -1,6 +1,8 @@
 local mail = require('mail')
 local getFile = require('getFile')
 
+questToSend = 3
+mailToFlag = 2
 
 local function getRandom( rndNum, maxNum )
 	if( rndNum >= maxNum ) then
@@ -37,7 +39,7 @@ function getMails( fileName, mailName, password, answers )
 		mails = mail.getValidMails( gmail, taskInfo[2], taskInfo[3], taskInfo[1])
 	end
 	if answers then
-		local flaggedM = getRandom( 2, #mails )
+		local flaggedM = getRandom( mailToFlag, #mails )
 
 		for i = 1, #flaggedM do
 			mail.flagMail(gmail, mails[ flaggedM[i] ].uid)
@@ -78,7 +80,7 @@ function sendMails( fileInfoName, taskContent, taskTemplate, mailRcpt, mailAddre
 	for line in io.lines() do quests[#quests + 1] = line end
 	getFile.closeFile(file)
 	
-	local questNums = getRandom( 3, #quests )
+	local questNums = getRandom( questToSend, #quests )
 
 	for i = 1, #questNums do
 		templateContest = templateContest..quests[questNums[i]]..'\n'

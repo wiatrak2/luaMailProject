@@ -1,8 +1,8 @@
 #include "sender.h"
 
-std::vector< std::string > getStudentsMails()
+std::vector< std::string > getStudentsMails( std::string const& pathToCsv )
 {
-	std::ifstream input("../students.csv");
+	std::ifstream input(pathToCsv);
 	std::vector<std::string> mails;
 	std::string line;
 	std::getline( input, line ); //first line
@@ -17,16 +17,16 @@ std::vector< std::string > getStudentsMails()
 	return mails;
 }
 
-void sendMail( std::string& mail, std::string& mailAddress, std::string& password )
+void sendMail( std::string& mail, std::string& mailAddress, std::string& password, std::string const& pathToTask, std::string const& pathToQuest, std::string const& pathToTemplate )
 {
 	lua_State *L = luaL_newstate();
 	luaL_openlibs( L );
 	if (luaL_loadfile(L, "main.lua")  || lua_pcall(L, 0, 0, 0))
 	    throw std::runtime_error( "Could not load lua script" );
 	lua_getglobal(L, "sendMails");
-	lua_pushstring(L, "../task.txt");
-	lua_pushstring(L, "../quest.txt");
-	lua_pushstring(L, "../template.txt");
+	lua_pushstring(L, pathToTask.c_str());
+	lua_pushstring(L, pathToQuest.c_str());
+	lua_pushstring(L, pathToTemplate.c_str());
 	lua_pushstring(L, mail.c_str());
 	lua_pushstring(L, mailAddress.c_str());
 	lua_pushstring(L, password.c_str());

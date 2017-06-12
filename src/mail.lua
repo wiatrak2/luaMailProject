@@ -69,7 +69,7 @@ local function parseHeader( headers )
 	local mailInfo = {}
 	for _,v in pairs(headers) do 
 		if( string.match(v, 'From:.*') == v ) then 
-			mailInfo.from =  string.match(v, '%w+%@%w+%.%w+')
+			mailInfo.from =  string.match(v, '<(.+%@%w+%.%w+)')
 		end
 		if( string.match(v, 'Subject:.*') == v ) then
 			mailInfo.sub = string.sub(v, 10)

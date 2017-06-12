@@ -7,9 +7,9 @@ bool studentMail( std::string line, std::set< std::string >& students )
 	return ( students.find( mail ) != students.end() );
 }
 
-void addPoints( std::set< std::string >& students, std::string const& taskName )
+void addPoints( std::set< std::string >& students, std::string const& taskName, std::string const& pathToCsv )
 {
-	std::ifstream input("../students.csv");
+	std::ifstream input(pathToCsv);
 	std::vector<std::string> lines;
 	std::string line;
 	std::getline( input, line ); //first line
@@ -22,7 +22,7 @@ void addPoints( std::set< std::string >& students, std::string const& taskName )
 	}
 	input.close();
 
-	std::ofstream output("../students.csv");
+	std::ofstream output(pathToCsv);
 	for( auto outLine : lines ) 
 		output << outLine;
 	output.close();
@@ -38,14 +38,14 @@ std::string luaString( lua_State *L )
   	return result;
 }
 
-std::set< std::string > receiveMails( std::string& mailAddress, std::string& password, bool answers )
+std::set< std::string > receiveMails( std::string& mailAddress, std::string& password, bool answers, std::string const& pathToTask )
 {
 	lua_State *L = luaL_newstate();
 	luaL_openlibs( L );
 	if (luaL_loadfile(L, "main.lua")  || lua_pcall(L, 0, 0, 0))
 	    throw std::runtime_error( "Could not load lua script" );
 	lua_getglobal(L, "getMails");
-	lua_pushstring(L, "../task.txt");
+	lua_pushstring(L, pathToTask.c_str());
 	lua_pushstring(L, mailAddress.c_str());
 	lua_pushstring(L, password.c_str());
 	lua_pushboolean(L, answers);
@@ -60,9 +60,9 @@ std::set< std::string > receiveMails( std::string& mailAddress, std::string& pas
 	return res;
 }
 
-std::string getTaskName()
+std::string getTaskName( std::string const& pathToTask )
 {
-	std::ifstream input("../task.txt");
+	std::ifstream input(pathToTask);
 	std::string line;
 	std::getline( input, line );
 	line = line.substr( 6 );
