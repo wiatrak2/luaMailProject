@@ -1,0 +1,10 @@
+1. Na podstawie A oblicz B i zwróć C
+2. Wymień 20 zastosowań A w dziedzinie B
+3. Rozwiąż zadanie nr 2 ze zbioru
+4. Odpowiedz na dowolne pytanie z ostatniego slajdu z prezentacji
+5. Rozwiąż układ równań 2*x + 1 = 2 ; 3*x - 7 = 4
+6. Podaj przyczyny wydażenia X
+7. Podaj skutki wydarzenia Y
+8. Jaki wpłuw na B ma zachowanie A?
+9. Napisz krótką notkę na temat N
+10. Czy prawdą jest że N = R? Odpowiedź uzasadnij
