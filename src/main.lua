@@ -61,10 +61,13 @@ function getMails( fileName, mailName, password, answers )
 	return res
 end
 
-function sendMails( fileInfoName, taskContent, taskTemplate, mailRcpt )
+function sendMails( fileInfoName, taskContent, taskTemplate, mailRcpt, mailAddress, password )
 	local file = getFile.openFile( fileInfoName )
 	local taskInfo = getFile.getFields( file )
 	getFile.closeFile( file )
+
+	local subject = taskInfo[1]
+	subject = subject:sub( 2, subject:len() - 1 )
 
 	file = getFile.openFile(taskTemplate)
 	local templateContest = getFile.getTemplate(file)
@@ -80,9 +83,6 @@ function sendMails( fileInfoName, taskContent, taskTemplate, mailRcpt )
 	for i = 1, #questNums do
 		templateContest = templateContest..quests[questNums[i]]..'\n'
 	end
-	mail.sendMessage( taskInfo[1], templateContest, mailRcpt, '***@gmail.com', '***' );
+	templateContest = getFile.createMailBody( templateContest, subject, taskInfo )
+	mail.sendMessage( subject, templateContest, mailRcpt, mailAddress, password );
 end
-
---mails = getMails('../task.txt')
---for _, v in pairs(mails) do print(v) end
---sendMails('../task.txt', '../quest.txt', '../template.txt', '***@gmail.com')

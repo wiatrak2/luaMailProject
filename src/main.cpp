@@ -1,9 +1,10 @@
 #include "receiver.h"
+#include "sender.h"
 
 int main(int argc, char const *argv[])
 {
 	std::string taskName = getTaskName();
-	printf("Aby pobrać maile związanie z zadaniem %s wciśnij '1'\nAby pobrać odpowiedzi do zadania %s wciśnij '2'\nAby wysłać pytania do zadania %s wciśnij '3'.\n Następnie zatwierdź wciskająć ENTER\n", taskName.c_str(), taskName.c_str(), taskName.c_str());
+	printf("Aby pobrać maile związanie z zadaniem %s wciśnij '1'\nAby pobrać odpowiedzi do zadania %s wciśnij '2'\nAby wysłać pytania do zadania %s wciśnij '3'\nAby wysłać maila testowego wciśnij '4'\n Następnie zatwierdź wciskająć ENTER\n", taskName.c_str(), taskName.c_str(), taskName.c_str());
 	int option;
 	scanf("%d", &option);
 	if(option == 1 || option == 2)
@@ -27,6 +28,30 @@ int main(int argc, char const *argv[])
 		else
 		{
 			printf("Zaktualizowano skrzynkę mailową\n");
+		}
+	}
+	else if( option == 3 || option == 4 )
+	{
+		printf("Podaj adres e-mail:\n");
+		std::string mailAddress;
+		std::cin >> mailAddress;
+		printf("Podaj hasło:\n");
+		std::string password;
+		std::cin >> password;
+		auto mails = getStudentsMails();
+		if( option == 4 )
+		{
+			sendMail( mailAddress, mailAddress, password );
+			printf("Wysłano testowego maila na %s\n", mailAddress.c_str());
+		}
+		else
+		{
+			for( auto& m : mails )
+			{
+				sendMail( m, mailAddress, password );
+				printf("Wysłano maila do %s\n", m.c_str());
+			}
+			printf("Wysyłanie zakończone.\n");
 		}
 	}
 

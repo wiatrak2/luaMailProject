@@ -38,7 +38,7 @@ std::string luaString( lua_State *L )
   	return result;
 }
 
-std::set< std::string > receiveMails(std::string mailAddress, std::string password, bool answers)
+std::set< std::string > receiveMails( std::string& mailAddress, std::string& password, bool answers )
 {
 	lua_State *L = luaL_newstate();
 	luaL_openlibs( L );
