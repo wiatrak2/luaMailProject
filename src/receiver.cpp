@@ -38,18 +38,17 @@ std::string luaString( lua_State *L )
   	return result;
 }
 
-std::set< std::string > receiveMails( std::string& mailAddress, std::string& password, bool answers, std::string const& pathToTask )
+std::set< std::string > receiveMails( std::string& mailAddress, std::string& password, bool answers )
 {
 	lua_State *L = luaL_newstate();
 	luaL_openlibs( L );
 	if (luaL_loadfile(L, "main.lua")  || lua_pcall(L, 0, 0, 0))
 	    throw std::runtime_error( "Could not load lua script" );
 	lua_getglobal(L, "getMails");
-	lua_pushstring(L, pathToTask.c_str());
 	lua_pushstring(L, mailAddress.c_str());
 	lua_pushstring(L, password.c_str());
 	lua_pushboolean(L, answers);
-	if( lua_pcall( L, 4, 1, 0 ) != LUA_OK )
+	if( lua_pcall( L, 3, 1, 0 ) != LUA_OK )
 		throw std::runtime_error("Error while loading messages");
 	std::set< std::string > res;
 	lua_pushnil(L);
@@ -58,6 +57,17 @@ std::set< std::string > receiveMails( std::string& mailAddress, std::string& pas
 		res.insert( luaString( L ) );
 	}
 	return res;
+}
+
+void getPathToFiles( std::string& pathToTask, std::string& pathToCsv )
+{
+	lua_State *L = luaL_newstate();
+	if (luaL_loadfile(L, "../config.lua")  || lua_pcall(L, 0, 0, 0))
+       throw std::runtime_error("cannot load config.lua file" );
+   	lua_getglobal(L, "nameOfTask");
+   	pathToTask = "../" + luaString( L );
+   	lua_getglobal(L, "nameOfCsv");
+ 	pathToCsv = "../" + luaString( L );  	 
 }
 
 std::string getTaskName( std::string const& pathToTask )

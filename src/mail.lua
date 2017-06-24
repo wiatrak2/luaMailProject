@@ -106,11 +106,13 @@ function getValidMails( gmail, dateSince, dateBefore, sub )
     return validMails
 end
 
-function moveToMailbox( gmail, mails, mailboxName )
+function moveToMailbox( gmail, mails, mailboxName, deleteFromMain )
     for _, v in pairs(mails) do
         gmail:uid('COPY '..v.uid..' '..mailboxName)
-        --gmail:store(v.uid..' +FLAGS (\\Deleted)' )
-        --gmail:expunge()
+        if( deleteFromMain ) then
+        	gmail:store(v.uid..' +FLAGS (\\Deleted)' )
+        	gmail:expunge()
+        end
     end
 end
 

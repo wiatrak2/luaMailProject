@@ -1,8 +1,7 @@
 local mail = require('mail')
 local getFile = require('getFile')
-
-questToSend = 3
-mailToFlag = 2
+package.path = package.path .. ";../config.lua"
+local config = require('config')
 
 local function getRandom( rndNum, maxNum )
 	if( rndNum >= maxNum ) then
@@ -25,8 +24,8 @@ local function getRandom( rndNum, maxNum )
 	return res
 end
 
-function getMails( fileName, mailName, password, answers )
-	local file = getFile.openFile( fileName )
+function getMails( mailName, password, answers )
+	local file = getFile.openFile( '../'..config.nameOfTask )
 	local taskInfo = getFile.getFields( file )
 	getFile.closeFile( file )
 
@@ -39,7 +38,7 @@ function getMails( fileName, mailName, password, answers )
 		mails = mail.getValidMails( gmail, taskInfo[2], taskInfo[3], taskInfo[1])
 	end
 	if answers then
-		local flaggedM = getRandom( mailToFlag, #mails )
+		local flaggedM = getRandom( config.mailToFlag, #mails )
 
 		for i = 1, #flaggedM do
 			mail.flagMail(gmail, mails[ flaggedM[i] ].uid)
@@ -53,7 +52,7 @@ function getMails( fileName, mailName, password, answers )
 		mailboxName = taskInfo[1]:sub(1, taskInfo[1]:len()-1)..' - Wszystkie"'
 	end
 	createMailbox(gmail, mailboxName )
-	moveToMailbox(gmail, mails, mailboxName )
+	moveToMailbox(gmail, mails, mailboxName, config.deleteFromMainMailbox )
 	closeMail(gmail)
 
 	local res = {}
@@ -63,24 +62,24 @@ function getMails( fileName, mailName, password, answers )
 	return res
 end
 
-function sendMails( fileInfoName, taskContent, taskTemplate, mailRcpt, mailAddress, password )
-	local file = getFile.openFile( fileInfoName )
+function sendMails( mailRcpt, mailAddress, password )
+	local file = getFile.openFile( '../'..config.nameOfTask )
 	local taskInfo = getFile.getFields( file )
 	getFile.closeFile( file )
 
 	local subject = taskInfo[1]
 	subject = subject:sub( 2, subject:len() - 1 )
 
-	file = getFile.openFile(taskTemplate)
+	file = getFile.openFile( '../'..config.nameOfTemplate )
 	local templateContest = getFile.getTemplate(file)
 	getFile.closeFile( file )
 
 	local quests = {}
-	file = getFile.openFile(taskContent)
+	file = getFile.openFile( '../'..config.nameOfQuest )
 	for line in io.lines() do quests[#quests + 1] = line end
 	getFile.closeFile(file)
 	
-	local questNums = getRandom( questToSend, #quests )
+	local questNums = getRandom( config.questToSend, #quests )
 
 	for i = 1, #questNums do
 		templateContest = templateContest..quests[questNums[i]]..'\n'
