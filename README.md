@@ -2,7 +2,9 @@ Mail homework system
 =======================
 
 Lua Course 2016/17
+
 Wojciech Pratkowiecki
+
 University of Wroclaw
 
 -----------------
