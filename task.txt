@@ -1,3 +1,0 @@
-task: "Zadanie 5"
-start date: 10-Jun-2017
-deadline: 23-Jun-2017

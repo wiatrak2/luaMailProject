@@ -1,0 +1,3 @@
+task: "Zadanie 6"
+start date: 10-Jun-2017
+deadline: 29-Jun-2017
